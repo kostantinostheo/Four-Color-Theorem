@@ -2,12 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "grapgInter.h"
-//Konstantinos Theofilis sdi1600287
 
-/*
-Metra tis grammes tou arxiou. O arithmoston gramwn xrisimopoieite istera stin dimiourgia 
-2D pinaka gitniasis.
-*/
 int countFileLines(FILE *fp)
 {
     int countFileLines=0;
@@ -29,9 +24,9 @@ int countFileLines(FILE *fp)
 }
 
 /*
-Apo to arxeio paei kai pernei tis xwres. 2h stili arxeiou.
+From file, get the countries. Second column.
 */
- char **getCountries(FILE *fp, int fileLine)
+char **getCountries(FILE *fp, int fileLine)
 {
     char BUFF[32];
     int i;
@@ -39,7 +34,6 @@ Apo to arxeio paei kai pernei tis xwres. 2h stili arxeiou.
     char **countryname;
 
     countryname=malloc(fileLine*sizeof(char*));
-    //printf("Memory allocated\n");
 
     for (i = 0; i < fileLine; i++)
     {
@@ -48,18 +42,21 @@ Apo to arxeio paei kai pernei tis xwres. 2h stili arxeiou.
        
         countryname[i]=malloc(strlen(BUFF)+1);
         strcpy(countryname[i], BUFF);
-        do  //pare mono tis xwres. Ta alla parelipse ta.
+        do
         {
             c=getc(fp); 
         }while (c != EOF && c != '\n');
         
     }
 
-    rewind(fp); //pointer ksana stin arxi tou arxiou.
+    rewind(fp);
     return countryname;
     
 }
     
+/*
+Finds the country's position inside the table.
+*/
 int findCountryPos(char **countriesArray, char *n_name, int fileLines)
 {
     int i;
@@ -69,11 +66,6 @@ int findCountryPos(char **countriesArray, char *n_name, int fileLines)
             return i;
     }
     return -1;
-
-/*
-Epistrefi tin thesi tis xwras apo ton pinaka. Metra katheta apo 0 ews 'fileLines'
-*/
-
 }
 
 int returnPositionfromColor(char *color)
@@ -86,9 +78,6 @@ int returnPositionfromColor(char *color)
             return i;
     }
     return -1;
-/*
-
-*/
 }
 
 
@@ -99,7 +88,6 @@ void fillAdjancyTable( char **AdjTable,  char **countriesArray, FILE *fp, int fi
     char *split_name;
     int posColor;
  
- //puts("fillAdj1");
 
     for (i = 0; i < fileLine; i++)
     {
@@ -120,20 +108,20 @@ void fillAdjancyTable( char **AdjTable,  char **countriesArray, FILE *fp, int fi
             if (findCountryPos(countriesArray,split_name,fileLine)!=-1)
                 j=findCountryPos(countriesArray,split_name,fileLine);
         
-            //printf("%s ",split_name);
             AdjTable[i][j]=1;
             AdjTable[j][i]=1;
 
             split_name = strtok(NULL," \n");
-            //puts("A");
         }
         
     }
 
 }
 
-
-
+/*
+Check if map can be colored
+If two neighbors have the same color then the map can't be colored
+*/
 int fillAdjancyTableforAlreadyColoredMaps( char **AdjTable,  char **countriesArray, int *colorTable ,FILE *fp, int fileLine)
 {
     char BUFF[256];
@@ -175,15 +163,13 @@ int fillAdjancyTableforAlreadyColoredMaps( char **AdjTable,  char **countriesArr
     {
         for (k = 0; k < fileLine; k++)
         {
-           if(AdjTable[i][k]==1 && colorTable[i]==colorTable[k]) //An dio xwres pou gitonevoun exoun idio xrwma tote fail. 
+           if(AdjTable[i][k]==1 && colorTable[i]==colorTable[k])
                 return -1;
         } 
     }
     return 0;   
 
 }
-
-
 
 void printAdjTable( char **AdjTable, int fileLine)
 {
@@ -199,5 +185,3 @@ void printAdjTable( char **AdjTable, int fileLine)
     }
     
 }
-
-
